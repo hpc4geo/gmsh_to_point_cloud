@@ -33,8 +33,9 @@
     * `tar zxvf metis-xxx.tar.gz`
     * `cd metis-5.1.0`
     * `make config shared=1`
+        * Note `shared=1` is required to ensure the build creates a shared / dynamic library which is essential for interoperability with Python.
     * `make all`
-    * Lastly you will need to set the following environment variable  
+    * Lastly you will need to set the following environment variable `METIS_DLL` to indicate the full path to the metis shared/dynamic library. For example  
         `export METIS_DLL=${PWD}/build/Darwin-arm64/libmetis/libmetis.dylib`
 
 3. METIS for Python (https://metis.readthedocs.io/en/latest/)
