@@ -6,17 +6,17 @@ typedef struct _p_CellPartition *CellPartition;
 typedef struct _p_Mesh *Mesh;
 
 struct _p_CellPartition {
-  int ncell;
-  int *cell_list;
   double cmin[3],cmax[3];
+  int *cell_list;
+  int ncell;
 };
 
 struct _p_Mesh {
-  int nvert,ncell,coor_dim,points_per_cell;
+  CellPartition *partition;
   double *vert;
   int *cell;
+  int nvert,ncell,coor_dim,points_per_cell;
   int npartition;
-  CellPartition *partition;
 };
 
 void CellPartitionCreate(CellPartition *_c);

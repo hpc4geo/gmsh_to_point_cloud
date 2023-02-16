@@ -101,25 +101,26 @@ void parse_mesh(const char filename[],Mesh *m)
   double *coor=NULL,cmin[3],cmax[3];
   int    *cell=NULL,*cell_list=NULL;
   Mesh   mesh = NULL;
+  size_t bytes_read=0;
 
   *m = NULL;
   fp = fopen(filename, "rb");
 
-  fread(&nvert,sizeof(int),1,fp);
-  fread(&coor_dim,sizeof(int),1,fp);
+  bytes_read = fread(&nvert,sizeof(int),1,fp);
+  bytes_read = fread(&coor_dim,sizeof(int),1,fp);
   //printf("nvert %d coor_dim %d\n",nvert,coor_dim);
 
   coor = (double*)malloc(sizeof(double)*nvert*coor_dim);
   memset(coor,0,sizeof(double)*nvert*coor_dim);
-  fread(coor,sizeof(double),nvert*coor_dim,fp);
+  bytes_read = fread(coor,sizeof(double),nvert*coor_dim,fp);
 
-  fread(&ncell,sizeof(int),1,fp);
-  fread(&pp_cell,sizeof(int),1,fp);
+  bytes_read = fread(&ncell,sizeof(int),1,fp);
+  bytes_read = fread(&pp_cell,sizeof(int),1,fp);
   //printf("ncell %d points-per-cell %d\n",ncell,pp_cell);
 
   cell = (int*)malloc(sizeof(int)*ncell*pp_cell);
   memset(cell,0,sizeof(int)*ncell*pp_cell);
-  fread(cell,sizeof(int),ncell*pp_cell,fp);
+  bytes_read = fread(cell,sizeof(int),ncell*pp_cell,fp);
 
   switch (pp_cell) {
     case 2:
@@ -134,7 +135,6 @@ void parse_mesh(const char filename[],Mesh *m)
     free(cell);
     fclose(fp);
     return;
-    break;
   }
 
   MeshCreate(&mesh);
@@ -146,7 +146,7 @@ void parse_mesh(const char filename[],Mesh *m)
   mesh->cell = cell;
 
   nparts = 0;
-  fread(&nparts,sizeof(int),1,fp);
+  bytes_read = fread(&nparts,sizeof(int),1,fp);
 
   mesh->npartition = nparts;
   mesh->partition = (CellPartition*)malloc(sizeof(CellPartition)*nparts);
@@ -155,15 +155,15 @@ void parse_mesh(const char filename[],Mesh *m)
   for (p=0; p<nparts; p++) {
     CellPartition cp;
 
-    fread(cmin,sizeof(double),coor_dim,fp);
-    fread(cmax,sizeof(double),coor_dim,fp);
-    fread(&nc,sizeof(int),1,fp);
+    bytes_read = fread(cmin,sizeof(double),coor_dim,fp);
+    bytes_read = fread(cmax,sizeof(double),coor_dim,fp);
+    bytes_read = fread(&nc,sizeof(int),1,fp);
 
     //printf("part %d\n\txmin %+1.4e %+1.4e %+1.4e\n\txmax %+1.4e %+1.4e %+1.4e\n\tncells %d\n",p,cmin[0],cmin[1],cmin[2],cmax[0],cmax[1],cmax[2],nc);
 
     cell_list = (int*)malloc(sizeof(int)*nc);
     memset(cell_list,0,sizeof(int)*nc);
-    fread(cell_list,sizeof(int),nc,fp);
+    bytes_read = fread(cell_list,sizeof(int),nc,fp);
 
     CellPartitionCreate(&cp);
     mesh->partition[p] = cp;
@@ -181,13 +181,13 @@ void parse_field(Mesh m,const char filename[],char ftypevoid,void **_data)
   FILE   *fp=NULL;
   int    len,dtype;
   void   *buffer;
-  size_t bytes,bytes_item;
+  size_t bytes,bytes_item=0,bytes_read=0;
   bool   valid = true;
 
   *_data = NULL;
   fp = fopen(filename, "rb");
 
-  fread(&len,sizeof(int),1,fp);
+  bytes_read = fread(&len,sizeof(int),1,fp);
   switch (ftypevoid) {
     case 'c':
       if (len != m->ncell) { valid = false; }
@@ -204,7 +204,7 @@ void parse_field(Mesh m,const char filename[],char ftypevoid,void **_data)
     return;
   }
 
-  fread(&dtype,sizeof(int),1,fp);
+  bytes_read = fread(&dtype,sizeof(int),1,fp);
   switch (dtype) {
     case 10:
     bytes_item = sizeof(short);
@@ -224,6 +224,7 @@ void parse_field(Mesh m,const char filename[],char ftypevoid,void **_data)
     break;
 
     default:
+    bytes_item = 0;
     valid = false;
     break;
   }
@@ -236,7 +237,7 @@ void parse_field(Mesh m,const char filename[],char ftypevoid,void **_data)
 
   buffer = (void*)malloc(bytes);
   memset(buffer,0,bytes);
-  fread(buffer,bytes_item,len,fp);
+  bytes_read = fread(buffer,bytes_item,len,fp);
   *_data = buffer;
 
   fclose(fp);
