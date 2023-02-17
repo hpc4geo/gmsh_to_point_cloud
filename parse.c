@@ -203,6 +203,7 @@ void parse_field(Mesh m,const char filename[],char ftypevoid,void **_data)
   }
   if (!valid) {
     printf("parse_field(): From %s -> unable to parse field. Value of ftypevoid is inconsistent with data.\n",filename);
+    fclose(fp);
     return;
   }
 
