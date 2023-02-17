@@ -14,7 +14,7 @@ def parse_regions_tetra(filename):
   regions = mesh.get_cell_data(name='gmsh:physical', cell_type='tetra')
 
   dgeo = dd.Mesh(verts, cells, 'tetra')
-  dgeo.build_partitions(npart=200)
+  dgeo.build_partitions(npart="auto")
   print(dgeo)
 
   # Collect vertex and cell field data into a dict
