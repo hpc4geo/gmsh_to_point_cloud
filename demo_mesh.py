@@ -169,5 +169,5 @@ if __name__=="__main__":
   #test_3d_triangle()
   test_3d_tetra()
 
-  #fname = "/Users/dmay/Downloads/I3ELVIS_Gmsh_development/I3ELVIS.msh"
+  #fname = "data/I3ELVIS.msh"
   #parse_i3elvis_tetra(fname)
