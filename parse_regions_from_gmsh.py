@@ -20,7 +20,7 @@ def parse_regions_tetra(filename):
   # Collect vertex and cell field data into a dict
   cell_data = {"region": [regions]}
 
-  #dgeo.vtu('md.vtu', cdata=cell_data)
+  dgeo.vtu('md.vtu', cdata=cell_data)
 
   dgeo.write('md.bin')
 
@@ -37,4 +37,4 @@ if __name__=="__main__":
   args = parser.parse_args()
   print('Loading file', args.filename)
 
-  parse_regions_tetra(fname)
+  parse_regions_tetra(args.filename)
