@@ -47,3 +47,8 @@
     * `gcc -c -O2 -Wall -std=c99  point_in_tetra.c`
     * A demo / testbed for the C routines are provided in `demo_parse.c`. This can be compiled via the following  
     `gcc -O2 -Wall -std=c99 demo_parse.c -o demo parse.o point_in_tetra.o`
+    
+
+# Examples
+1. First execute the following `python parse_regions_from_gmsh.py`. This load a default .msh file and output mesh, mesh partitions (`md.bin`)and region data (`region_cell.bin`).
+2. Now execute `./demo`. This will load `md.bin` and `region_cell.bin` and perform point locations on particles with randomly generated coordinates.
