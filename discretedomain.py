@@ -276,6 +276,10 @@ class Mesh:
       npart = float(self.cells.shape[0]) / ntarget_cells
       npart = int(npart)
       if npart < 1: npart = 1
+    print('build_partitions(): Using', npart, 'partiions')
+    if npart == 1:
+      print('build_partitions(): Single partition case - returning')
+      return
 
     graph = metis.adjlist_to_metis(self.c2c)
     partition = metis.part_graph(graph, nparts=npart, tpwgts=None, ubvec=None, recursive=False,
@@ -293,11 +297,25 @@ class Mesh:
     for k in range(part_idx.shape[0]):
       self.partition[ part_idx[k] ].append(k)
     # flatten and turn into numpy array
+    empty_partitions = False
+    ncell_max = 0
+    ncell_min = self.cells.shape[0]
     for p in range(npart):
       cells = self.partition[p]
       self.partition[p] = np.array(cells, dtype=np.int32)
+      ncell_part = self.partition[p].shape[0]
+      ncell_min = min(ncell_min, ncell_part)
+      ncell_max = max(ncell_max, ncell_part)
       #print(self.partition[p])
+      if ncell_part == 0:
+        empty_partitions = True
 
+    print('build_partitions(): min num. cells', ncell_min)
+    print('build_partitions(): max num. cells', ncell_max)
+
+    if empty_partitions:
+      print('build_partitions(): ** WARNING ** Some partitions did not contain any elements - deleting all parition information. Reduce value for `npart` or use `npart = "auto"`')
+      self.partition = None
 
   def pyview(self):
     """
