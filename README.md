@@ -50,5 +50,5 @@
     
 
 # Examples
-1. First execute the following `python parse_regions_from_gmsh.py`. This load a default .msh file and output mesh, mesh partitions (`md.bin`)and region data (`region_cell.bin`).
+1. First execute the following `python parse_regions_from_gmsh.py`. This will load a default .msh file and output the mesh and mesh partitions (`md.bin`) and the region data associated with the cells (`region_cell.bin`).
 2. Now execute `./demo`. This will load `md.bin` and `region_cell.bin` and perform point locations on particles with randomly generated coordinates.
