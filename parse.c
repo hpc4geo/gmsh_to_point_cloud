@@ -105,6 +105,7 @@ void parse_mesh(const char filename[],Mesh *m)
 
   *m = NULL;
   fp = fopen(filename, "rb");
+  if (!fp) { printf("parse_mesh(): File %s was not found or read\n",filename); return; }
 
   bytes_read = fread(&nvert,sizeof(int),1,fp);
   bytes_read = fread(&coor_dim,sizeof(int),1,fp);
@@ -186,6 +187,7 @@ void parse_field(Mesh m,const char filename[],char ftypevoid,void **_data)
 
   *_data = NULL;
   fp = fopen(filename, "rb");
+  if (!fp) { printf("parse_field(): File %s was not found or read\n",filename); return; }
 
   bytes_read = fread(&len,sizeof(int),1,fp);
   switch (ftypevoid) {

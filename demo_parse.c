@@ -149,17 +149,20 @@ int main(int nargs,char *args[])
   Mesh mesh = NULL;
 
   parse_mesh("md.bin",&mesh);
+  if (!mesh) { printf("mesh = NULL. Aborting.\n"); return(0); }
   {
-    long int *data;
-    
+    long int *data = NULL;
+
     parse_field(mesh,"region_cell.bin",'c',(void**)&data);
+    if (!data) { printf("data = NULL. Aborting.\n"); return(0); }
     printf("cell regions %ld %ld %ld %ld %ld\n",data[0],data[1],data[2],data[3],data[4]);
     free(data);
   }
   {
-    double *data;
+    double *data = NULL;
 
     parse_field(mesh,"temperature_vertex.bin",'v',(void**)&data);
+    if (!data) { printf("data = NULL. Aborting.\n"); return(0); }
     printf("vertex temperature %+1.3e %+1.3e %+1.3e %+1.3e %+1.3e\n",data[0],data[1],data[2],data[3],data[4]);
     free(data);
   }
