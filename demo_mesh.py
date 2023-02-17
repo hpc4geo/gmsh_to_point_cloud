@@ -94,6 +94,7 @@ def test_3d_tetra():
 
   dgeo.write('md.bin')
 
+  dgeo.write_fields(cdata=cell_data, vdata=point_data)
 
 # Filter surface triangles (from boundary) from the sphere example
 def test_3d_triangle():
